@@ -1,11 +1,13 @@
 package com.company;
 
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class Main {
     private final static String holdFlag = "Pascal :> ";
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 	// write your code here
+        Interpreter ext;
         while (true) {
             String text = null;
             try {
@@ -15,7 +17,7 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(holdFlag + "Wrong input");
             }
-            Interpreter ext = new Interpreter (text);
+            ext = new Interpreter (text);
             String result = ext.getResult();
             System.out.println(holdFlag + result);
         }

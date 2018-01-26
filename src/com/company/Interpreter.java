@@ -16,7 +16,38 @@ public class Interpreter {
     }
 
     public String getResult() throws ParseException {
-        currentToken = getNextToken();
+        int flag = 0;
+        int[] cacu = new int[2];
+        String oper = "";
+        while (!(currentToken = getNextToken()).type.equals(EOF)) {
+            token t = currentToken;
+            switch (t.type) {
+                case INTEGER:
+                    cacu[flag] = cacu[flag] * 10 + Integer.valueOf(t.value);
+                    break;
+                case OPER:
+                    if (flag > 0) error();
+                    flag ++;
+                    oper = t.value;
+                    break;
+                case EOF:
+                    break;
+            }
+        }
+        switch (oper) {
+            case "+" :
+                result = String.valueOf(cacu[0] + cacu[1]);
+                break;
+            case "-" :
+                result = String.valueOf(cacu[0] - cacu[1]);
+                break;
+            case "*" :
+                result = String.valueOf(cacu[0] * cacu[1]);
+                break;
+            case "/" :
+                result = String.valueOf(cacu[0] / cacu[1]);
+                break;
+        }
 
         return result;
     }
@@ -28,7 +59,7 @@ public class Interpreter {
         }
     }
     private token getNextToken() throws ParseException {
-        if (this.pos > this.text.length())
+        if (this.pos >= this.text.length())
             return new token(EOF, null);
         char currentChar = text.charAt(pos);
         if (Character.isDigit(currentChar)) {
@@ -38,6 +69,10 @@ public class Interpreter {
         if (currentChar == '+' | currentChar == '-' | currentChar == '*' | currentChar == '/') {
             this.pos += 1;
             return new token(OPER, String.valueOf(currentChar));
+        }
+        if (currentChar == ' ') {
+            this.pos += 1;
+            return getNextToken();
         }
         throw new ParseException(text, pos);
     }
